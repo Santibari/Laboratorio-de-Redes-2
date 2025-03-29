@@ -1,0 +1,115 @@
+! Versión del Switch y Configuración General
+version 15.0
+no service timestamps log datetime msec        ! Deshabilita las marcas de tiempo en los logs
+no service timestamps debug datetime msec      ! Deshabilita las marcas de tiempo en la depuración
+no service password-encryption                ! Deshabilita la encriptación de contraseñas
+!
+hostname SW1                                   ! Define el nombre del switch como SW1
+!
+! Configuración de Spanning-Tree
+spanning-tree mode pvst                       ! Modo Spanning Tree: PVST (Per VLAN Spanning Tree)
+spanning-tree extend system-id                ! Extiende el sistema de identificación del Spanning Tree
+!
+! Configuración de Interfaces
+interface FastEthernet0/1
+ switchport access vlan 30                     ! Configura la interfaz para acceder a la VLAN 30
+ switchport trunk native vlan 99               ! Configura la VLAN nativa del trunk como 99
+ switchport trunk allowed vlan 30,50,65,99     ! Permite las VLANs 30, 50, 65, 99 en el trunk
+ switchport mode trunk                         ! Configura el puerto en modo trunk
+!
+interface FastEthernet0/2
+ switchport access vlan 65                     ! Configura la interfaz para acceder a la VLAN 65
+ switchport mode access                        ! Configura la interfaz en modo acceso
+!
+interface FastEthernet0/3
+ switchport mode trunk                         ! Configura la interfaz en modo trunk
+!
+interface FastEthernet0/4
+ switchport access vlan 30                     ! Configura la interfaz para acceder a la VLAN 30
+ switchport mode access                        ! Configura la interfaz en modo acceso
+!
+interface FastEthernet0/5
+! Sin configuración
+!
+interface FastEthernet0/6
+! Sin configuración
+!
+interface FastEthernet0/7
+ switchport trunk native vlan 99               ! Configura la VLAN nativa del trunk como 99
+ switchport trunk allowed vlan 30,50,65,99     ! Permite las VLANs 30, 50, 65, 99 en el trunk
+ switchport mode trunk                         ! Configura el puerto en modo trunk
+!
+interface FastEthernet0/8
+! Sin configuración
+!
+interface FastEthernet0/9
+! Sin configuración
+!
+interface FastEthernet0/10
+! Sin configuración
+!
+interface FastEthernet0/11
+! Sin configuración
+!
+interface FastEthernet0/12
+! Sin configuración
+!
+interface FastEthernet0/13
+ switchport access vlan 50                     ! Configura la interfaz para acceder a la VLAN 50
+!
+interface FastEthernet0/14
+ switchport access vlan 30                     ! Configura la interfaz para acceder a la VLAN 30
+ switchport mode access                        ! Configura la interfaz en modo acceso
+!
+interface FastEthernet0/15
+! Sin configuración
+!
+interface FastEthernet0/16
+! Sin configuración
+!
+interface FastEthernet0/17
+! Sin configuración
+!
+interface FastEthernet0/18
+! Sin configuración
+!
+interface FastEthernet0/19
+! Sin configuración
+!
+interface FastEthernet0/20
+! Sin configuración
+!
+interface FastEthernet0/21
+! Sin configuración
+!
+interface FastEthernet0/22
+! Sin configuración
+!
+interface FastEthernet0/23
+! Sin configuración
+!
+interface FastEthernet0/24
+ switchport mode trunk                         ! Configura el puerto en modo trunk
+!
+interface GigabitEthernet0/1
+! Sin configuración
+!
+interface GigabitEthernet0/2
+! Sin configuración
+!
+interface Vlan1
+ no ip address                                ! Deshabilita la dirección IP en VLAN 1
+ shutdown                                     ! Apaga la interfaz VLAN 1
+!
+! Configuración de Seguridad de Acceso
+line con 0
+ password cisco                               ! Contraseña para el acceso a la consola
+!
+line vty 0 4
+ login                                        ! Habilita el acceso remoto (líneas VTY 0-4)
+line vty 5 15
+ login                                        ! Habilita el acceso remoto (líneas VTY 5-15)
+!
+! Fin de la Configuración
+!
+end

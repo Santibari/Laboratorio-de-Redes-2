@@ -1,0 +1,68 @@
+! Versión del Router y Configuración General
+version 15.1
+no service timestamps log datetime msec        ! Deshabilita las marcas de tiempo en los logs
+no service timestamps debug datetime msec      ! Deshabilita las marcas de tiempo en la depuración
+no service password-encryption                ! Deshabilita la encriptación de contraseñas
+!
+hostname Router                                ! Define el nombre del router como Router
+!
+! Deshabilita el uso de CEF (Cisco Express Forwarding) para IP e IPv6
+no ip cef                                      ! Desactiva el uso de CEF para IPv4
+no ipv6 cef                                    ! Desactiva el uso de CEF para IPv6
+!
+! Licencia del dispositivo
+license udi pid CISCO2811/K9 sn FTX1017KD4M-    ! Define la licencia del router (CISCO2811)
+!
+! Configuración de Spanning-Tree (No se aplica generalmente en un router, pero configurado aquí por compatibilidad)
+spanning-tree mode pvst                       ! Modo Spanning Tree: PVST (Per VLAN Spanning Tree)
+!
+! Configuración de Interfaces
+interface FastEthernet0/0
+ no ip address                                 ! No se asigna una dirección IP en esta interfaz
+ duplex auto                                   ! Configura la negociación automática de duplex
+ speed auto                                    ! Configura la negociación automática de velocidad
+ shutdown                                     ! Apaga la interfaz
+!
+interface FastEthernet0/1
+ no ip address                                 ! No se asigna una dirección IP en esta interfaz
+ duplex auto                                   ! Configura la negociación automática de duplex
+ speed auto                                    ! Configura la negociación automática de velocidad
+ shutdown                                     ! Apaga la interfaz
+!
+interface Serial0/3/0
+ ip address 10.10.10.2 255.255.255.252         ! Asigna la dirección IP 10.10.10.2/30 a la interfaz serial
+ clock rate 64000                              ! Establece la tasa de reloj de 64 kbps en la interfaz serial
+!
+interface Serial0/3/1
+ ip address 10.0.0.3 255.0.0.0                ! Asigna la dirección IP 10.0.0.3/8 a la interfaz serial
+!
+interface Vlan1
+ no ip address                                 ! No se asigna una dirección IP en la VLAN 1
+ shutdown                                     ! Apaga la interfaz VLAN 1
+!
+! Configuración de RIP (Routing Information Protocol)
+router rip
+! No se especifica más configuración de RIP
+!
+! Configuración de Rutas Estáticas
+ip classless                                    ! Habilita la ruta de clase sin más especificación de red
+!
+! Configuración de NetFlow
+ip flow-export version 9                       ! Configura el protocolo de exportación de flujo versión 9
+!
+! Desactiva el uso de CDP (Cisco Discovery Protocol)
+no cdp run                                     ! Desactiva CDP en el router
+!
+! Configuración de Seguridad de Acceso
+line con 0
+! Sin contraseña configurada para la consola
+!
+line aux 0
+! Sin contraseña configurada para la línea auxiliar
+!
+line vty 0 4
+ login                                          ! Habilita el acceso remoto (líneas VTY 0-4)
+!
+! Fin de la Configuración
+!
+end

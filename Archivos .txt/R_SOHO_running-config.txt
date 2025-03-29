@@ -1,0 +1,91 @@
+! Versión del Router y Configuración General
+version 15.1
+no service timestamps log datetime msec        ! Deshabilita las marcas de tiempo en los logs
+no service timestamps debug datetime msec      ! Deshabilita las marcas de tiempo en la depuración
+no service password-encryption                ! Deshabilita la encriptación de contraseñas
+!
+hostname Router                                ! Define el nombre del router como Router
+!
+! Deshabilita el uso de CEF (Cisco Express Forwarding) para IP e IPv6
+no ip cef                                      ! Desactiva el uso de CEF para IPv4
+no ipv6 cef                                    ! Desactiva el uso de CEF para IPv6
+!
+! Licencia del dispositivo
+license udi pid CISCO2811/K9 sn FTX1017F3D6-    ! Define la licencia del router (CISCO2811)
+!
+! Configuración de Spanning-Tree (No se aplica generalmente en un router, pero configurado aquí por compatibilidad)
+spanning-tree mode pvst                       ! Modo Spanning Tree: PVST (Per VLAN Spanning Tree)
+!
+! Configuración de Interfaces
+interface FastEthernet0/0
+ no ip address                                 ! No se asigna una dirección IP en esta interfaz
+ duplex auto                                   ! Configura la negociación automática de duplex
+ speed auto                                    ! Configura la negociación automática de velocidad
+ shutdown                                     ! Apaga la interfaz
+!
+interface FastEthernet0/1
+ ip address 172.17.33.1 255.255.255.0          ! Asigna la dirección IP 172.17.33.1/24 a la interfaz
+ duplex auto                                   ! Configura la negociación automática de duplex
+ speed auto                                    ! Configura la negociación automática de velocidad
+!
+interface FastEthernet0/1.1
+ encapsulation dot1Q 30                        ! Configura el encapsulamiento 802.1Q para la subinterfaz VLAN 30
+ ip address 172.17.3.1 255.255.255.0           ! Asigna la dirección IP 172.17.3.1/24 a la subinterfaz
+ ip helper-address 172.17.3.7                  ! Configura la dirección de ayuda para DHCP en la subinterfaz
+!
+interface FastEthernet0/1.2
+ encapsulation dot1Q 50                        ! Configura el encapsulamiento 802.1Q para la subinterfaz VLAN 50
+ ip address 172.17.5.1 255.255.255.0           ! Asigna la dirección IP 172.17.5.1/24 a la subinterfaz
+ ip helper-address 172.17.3.7                  ! Configura la dirección de ayuda para DHCP en la subinterfaz
+!
+interface FastEthernet0/1.3
+ encapsulation dot1Q 65                        ! Configura el encapsulamiento 802.1Q para la subinterfaz VLAN 65
+ ip address 172.17.65.1 255.255.255.0          ! Asigna la dirección IP 172.17.65.1/24 a la subinterfaz
+ ip helper-address 172.17.3.7                  ! Configura la dirección de ayuda para DHCP en la subinterfaz
+!
+interface FastEthernet0/1.4
+ encapsulation dot1Q 99 native                 ! Configura el encapsulamiento 802.1Q para la subinterfaz VLAN 99, configurada como nativa
+ ip address 172.17.99.1 255.255.255.0          ! Asigna la dirección IP 172.17.99.1/24 a la subinterfaz
+ ip helper-address 172.17.3.7                  ! Configura la dirección de ayuda para DHCP en la subinterfaz
+!
+interface Serial0/3/0
+ ip address 10.10.10.1 255.255.255.252         ! Asigna la dirección IP 10.10.10.1/30 a la interfaz serial
+!
+interface Serial0/3/1
+ no ip address                                 ! No se asigna una dirección IP en esta interfaz serial
+ clock rate 2000000                            ! Establece la tasa de reloj de 2 Mbps en la interfaz serial
+!
+interface Vlan1
+ no ip address                                 ! No se asigna una dirección IP en la VLAN 1
+ shutdown                                     ! Apaga la interfaz VLAN 1
+!
+! Configuración de OSPF (Open Shortest Path First)
+router ospf 1
+ log-adjacency-changes                        ! Registra cambios en las adyacencias OSPF
+ network 172.17.3.0 0.0.0.255 area 0           ! Configura la red 172.17.3.0/24 para OSPF en el área 0
+ network 172.17.5.0 0.0.0.255 area 0           ! Configura la red 172.17.5.0/24 para OSPF en el área 0
+ network 172.17.33.0 0.0.0.255 area 0          ! Configura la red 172.17.33.0/24 para OSPF en el área 0
+ network 172.17.65.0 0.0.0.255 area 0          ! Configura la red 172.17.65.0/24 para OSPF en el área 0
+ network 172.17.99.0 0.0.0.255 area 0          ! Configura la red 172.17.99.0/24 para OSPF en el área 0
+!
+! Configuración de Rutas Estáticas
+ip classless                                    ! Habilita la ruta de clase sin más especificación de red
+ip route 0.0.0.0 0.0.0.0 172.17.33.254        ! Configura la ruta por defecto a 172.17.33.254
+!
+! Configuración de NetFlow
+ip flow-export version 9                       ! Configura el protocolo de exportación de flujo versión 9
+!
+! Configuración de Seguridad de Acceso
+line con 0
+! Sin contraseña configurada para la consola
+!
+line aux 0
+! Sin contraseña configurada para la línea auxiliar
+!
+line vty 0 4
+ login                                          ! Habilita el acceso remoto (líneas VTY 0-4)
+!
+! Fin de la Configuración
+!
+end
+
